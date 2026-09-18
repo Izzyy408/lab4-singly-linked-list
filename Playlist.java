@@ -1,0 +1,131 @@
+public class Playlist {
+
+    private static class Node {
+        Song song;
+        Node next;
+
+        Node(Song song) {
+            this.song = song;
+            this.next = null;
+        }
+    }
+
+    private Node head;
+    private Node tail;
+    private Node currentNode;
+    private int size;
+
+    public Playlist() {
+        head = null;
+        tail = null;
+        currentNode = null;
+        size = 0;
+    }
+
+    public void addSong(Song song) {
+        Node newNode = new Node(song);
+
+        if (head == null) {
+            head = newNode;
+            tail = newNode;
+            currentNode = newNode;
+        } else {
+            tail.next = newNode;
+            tail = newNode;
+        }
+
+        size++;
+        System.out.println("Song added: " + song);
+    }
+
+    public void removeSong(String title) {
+        if (head == null) {
+            System.out.println("Playlist is empty.");
+            return;
+        }
+
+        if (head.song.getTitle().equalsIgnoreCase(title)) {
+            if (currentNode == head) {
+                currentNode = head.next;
+            }
+
+            head = head.next;
+            size--;
+
+            if (head == null) {
+                tail = null;
+                currentNode = null;
+            }
+
+            System.out.println("Song removed: " + title);
+            return;
+        }
+
+        Node previous = head;
+        Node current = head.next;
+
+        while (current != null) {
+            if (current.song.getTitle().equalsIgnoreCase(title)) {
+
+                if (currentNode == current) {
+                    currentNode = current.next;
+                }
+
+                previous.next = current.next;
+
+                if (current == tail) {
+                    tail = previous;
+                }
+
+                size--;
+                System.out.println("Song removed: " + title);
+                return;
+            }
+
+            previous = current;
+            current = current.next;
+        }
+
+        System.out.println("Song not found.");
+    }
+
+    public void playNext() {
+        if (head == null) {
+            System.out.println("Playlist is empty.");
+            return;
+        }
+
+        if (currentNode == null) {
+            currentNode = head;
+        } else {
+            currentNode = currentNode.next;
+
+            if (currentNode == null) {
+                currentNode = head;
+            }
+        }
+
+        System.out.println("Now playing: " + currentNode.song);
+    }
+
+    public void displayPlaylist() {
+        if (head == null) {
+            System.out.println("Playlist is empty.");
+            return;
+        }
+
+        System.out.println("\n--- Playlist ---");
+
+        Node current = head;
+        int number = 1;
+
+        while (current != null) {
+            System.out.println(number + ". " + current.song);
+            current = current.next;
+            number++;
+        }
+
+        System.out.println("----------------");
+        System.out.println("Total songs: " + size);
+    }
+}
